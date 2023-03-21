@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Admin from "./composants/Admin";
+import Login from "./composants/Login";
+import User from "./composants/User";
+import Agency from "composants/Agency";
 
-function App() {
+const App = () => {
+  const [loggedIn, setloggedIn] = useState(false);
+
+  function callbackFunction(childData) {
+    setloggedIn(childData);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            loggedIn ? (
+              <Navigate to="/admin" />
+            ) : (
+              <Login parentCallback={callbackFunction} />
+            )
+          }
+        />
+        <Route
+          path="/admin"
+          element={loggedIn ? <Navigate to="/" /> : <Admin />}
+        />
+
+        <Route path="user" element={<User />} />
+        <Route path="agency" element={<Agency />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
